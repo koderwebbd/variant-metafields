@@ -1,0 +1,54 @@
+{%- unless product.has_only_default_variant -%}
+<variant-radios
+                    class="no-js-hidden"
+                    data-section="{{ section.id }}"
+                    data-url="{{ product.url }}"
+                    {{ block.shopify_attributes }}
+                  > {% assign variant = product.variants %}
+                    {%- for option in product.options_with_values -%}
+                      <fieldset class="js product-form__input">
+                        {% comment %}<legend class="form__label">{{ option.name }}:</legend>{% endcomment %}
+                        
+                         
+                          {% comment %}<legend class="variant_text form__label" data-variant-text-id="{{ variant.id }}"
+                              {% if product.selected_or_first_available_variant.id == variant.id %}
+                                style="display: block;"
+                              {% endif %}>{{ option.name }}: {{ variant.metafields.v_text.text.value }}</legend>{% endcomment %}
+
+                        
+                        {% assign i = -1 %}
+                        {%- for value in option.values -%}
+                          {% assign i = i | plus: 1 %}
+                          {% assign v_data = variant[i] %}
+                           
+
+                          <legend class="variant_text form__label" data-variant-text-id="{{ v_data.id }}"
+                              {% if product.selected_or_first_available_variant.id == v_data.id %}
+                                style="display: block;"
+                              {% endif %}>{{ value }}: {{ v_data.metafields.v_text.text.value }}</legend>
+
+                        {%- endfor -%}
+                        {%- for value in option.values -%}
+                          
+                           
+                          
+                          <input
+                            type="radio"
+                            id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            name="{{ option.name }}"
+                            value="{{ value | escape }}"
+                            form="{{ product_form_id }}"
+                            {% if option.selected_value == value %}
+                              checked
+                            {% endif %}
+                          >
+                          <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                            {{ value }}
+                          </label>
+                        {%- endfor -%}
+                      </fieldset>
+                    {%- endfor -%}
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </variant-radios>{%- endunless -%}
